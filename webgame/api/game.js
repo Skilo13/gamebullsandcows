@@ -56,8 +56,14 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
         }
 
-        let leaderboard = await readLeaderboard();
-        const result = await processGuess(name, guess, leaderboard);
+        let leaderboard;
+        try {
+            leaderboard = await readLeaderboard();
+        } catch (error) {
+            console.error('Error reading leaderboard:', error);
+            return res.status(500).json({ error: 'Failed to read leaderboard' });
+        }
+
 
         res.status(200).json({ ...result, history: guessesHistory, leaderboard });
     } else {
