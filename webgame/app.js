@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Event listener for the guess button
     document.getElementById('guessBtn').addEventListener('click', async () => {
         const guessInput = document.getElementById('guess');
         const guess = guessInput.value.trim();
@@ -35,24 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
             warningText.textContent = 'There was a problem processing your guess. Please try again.';
         }
 
-        // Clear input field after processing
-        guessInput.value = '';
+        guessInput.value = '';  // Clear input field after processing
     });
 
-    // Function to update the history section of the game
     function updateHistory(history) {
-        const historyElement = document.querySelector('.history-entries');
-        historyElement.innerHTML = '';  // Clear existing history
+        const historyEntriesElement = document.querySelector('.history-entries');
+        historyEntriesElement.innerHTML = '';  // Clear existing history entries
 
         history.forEach(entry => {
             const entryElement = document.createElement('div');
             entryElement.className = 'history-entry';
             entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            historyElement.appendChild(entryElement);
+            historyEntriesElement.appendChild(entryElement);
         });
     }
 
-    // Function to show the win modal
     function showWinModal(code) {
         const winCodeSpan = document.getElementById('winCode');
         winCodeSpan.textContent = code;
@@ -61,17 +57,23 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'block';
     }
 
-    // Function to hide the win modal and reset the game
     function hideWinModal() {
         const modal = document.getElementById('winModal');
         modal.style.display = 'none';
 
-        document.getElementById('guess').value = ''; // Clear the guess input field
-        document.getElementById('history').innerHTML = ''; // Clear the history
+        // Reset game state if necessary here
+        const guessInput = document.getElementById('guess');
+        guessInput.value = '';  // Clear the guess input field
+
+        // To ensure that the history is not cleared completely, fetch or initialize the new history
+        // This should be handled by fetching new history data or initializing it if the game is reset
     }
 
-    // Event listener for the play again button
-    document.getElementById('playAgainBtn').addEventListener('click', hideWinModal);
-});
+    document.getElementById('playAgainBtn').addEventListener('click', () => {
+        hideWinModal();
 
-// Remove the window load event if not needed or ensure it's used for appropriate initialization
+        // Reset the game's state and prepare for a new game
+        // This may involve fetching new game state from the server or resetting local variables
+        updateHistory([]);  // Clear the history view, or fetch new history as needed
+    });
+});
