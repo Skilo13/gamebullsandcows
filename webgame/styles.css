@@ -279,3 +279,45 @@ button:hover {
     font-size: 1rem; /* Reasonable font size */
     font-weight: bold; /* Make the text bold */
 }
+@media (max-width: 768px) {
+    /* Reduce padding and font size for smaller screens */
+    body {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    #headerContent button {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    #container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    #game, #instructions, #leaderboard {
+        width: 100%;
+        margin: 10px 0; /* Add vertical margin */
+    }
+
+    .history-entry, .leaderboard-entry {
+        font-size: 14px; /* Smaller font size for history and leaderboard entries */
+    }
+
+    #winModalContent {
+        width: 90%; /* Modal takes more width */
+        padding: 10px;
+    }
+
+    #winModalContent button {
+        padding: 5px 10px; /* Smaller padding for buttons in modal */
+    }
+
+    /* Adjust other elements as needed */
+}

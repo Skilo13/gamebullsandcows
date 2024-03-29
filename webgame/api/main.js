@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 app.use(session({
-    secret: 'changeThisToASecureSecret',
+    secret: '9f8d3d4307f8e03d9e5b9c42b8e586a6c4bf89f8a8ee4a4a3b2e4ed3138b6de9',
     resave: false,
     saveUninitialized: true
 }));
@@ -37,7 +37,7 @@ function checkForCode(secretCode, guess) {
     return { bulls, cows, isCorrect: bulls === 4 };
 }
 
-app.post('/api/game', (req, res) => {
+app.post('/api/main', (req, res) => {
     if (!req.session.secretCode) {
         req.session.secretCode = generateSecretCode();
         req.session.guessesHistory = [];
