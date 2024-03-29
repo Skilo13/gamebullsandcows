@@ -279,20 +279,14 @@ button:hover {
     font-size: 1rem; /* Reasonable font size */
     font-weight: bold; /* Make the text bold */
 }
-@media (max-width: 768px) {
-    /* Reduce padding and font size for smaller screens */
-    body {
-        padding: 10px;
-        font-size: 14px;
-    }
-
+@media (max-width: 600px) {
     header {
         flex-direction: column;
-        padding: 10px;
+        text-align: center;
     }
 
     #headerContent button {
-        padding: 5px 10px;
+        padding: 8px;
         font-size: 14px;
     }
 
@@ -301,23 +295,63 @@ button:hover {
         padding: 10px;
     }
 
-    #game, #instructions, #leaderboard {
+    #game, #instructions, #leaderboard, #history {
         width: 100%;
-        margin: 10px 0; /* Add vertical margin */
+        margin: 10px 0;
     }
 
     .history-entry, .leaderboard-entry {
-        font-size: 14px; /* Smaller font size for history and leaderboard entries */
+        font-size: 12px;
     }
 
     #winModalContent {
-        width: 90%; /* Modal takes more width */
+        width: 95%;
         padding: 10px;
     }
 
-    #winModalContent button {
-        padding: 5px 10px; /* Smaller padding for buttons in modal */
+    input, button {
+        padding: 8px;
+        font-size: 14px;
     }
 
-    /* Adjust other elements as needed */
+    /* Additional adjustments for small screens */
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #headerContent button {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    #container {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    #game, #instructions, #leaderboard, #history {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .history-entry, .leaderboard-entry {
+        font-size: 14px;
+    }
+
+    #winModalContent {
+        width: 80%;
+        padding: 15px;
+    }
+
+    input, button {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* Additional adjustments for medium screens */
 }
