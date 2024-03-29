@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     try {
       // Query the database to get the top scores
-      const result = await pool.query('SELECT name, MIN(tries) AS min_tries FROM leaderboard GROUP BY name ORDER BY min_tries ASC LIMIT 10;');
+      const result = await pool.query('SELECT name, MIN(tries) AS tries FROM leaderboard GROUP BY name ORDER BY min_tries ASC LIMIT 10;');
       res.status(200).json(result.rows);
     } catch (error) {
       // If there's a database error, log it and send a server error response
