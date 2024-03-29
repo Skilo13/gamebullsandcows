@@ -114,8 +114,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showWinModal() {
+    
+        const numTriesSpan = document.getElementById('numTries');
+  
+        numTriesSpan.textContent = tries; 
         const modal = document.getElementById('winModal');
         modal.style.display = 'block';
+        
     }
 
     document.getElementById('saveScoreBtn').addEventListener('click', async () => {

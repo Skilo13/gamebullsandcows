@@ -4,15 +4,16 @@ let secretCode = generateSecretCode();
 let guessesHistory = [];
 
 function generateSecretCode() {
-    const digits = '0123456789';
-    let code = '';
-    while (code.length < 4) {
-        const randomIndex = Math.floor(Math.random() * digits.length);
-        const digit = digits[randomIndex];
-        if (!code.includes(digit)) {
-            code += digit;
-        }
-    }
+    // const digits = '0123456789';
+    // let code = '';
+    // while (code.length < 4) {
+    //     const randomIndex = Math.floor(Math.random() * digits.length);
+    //     const digit = digits[randomIndex];
+    //     if (!code.includes(digit)) {
+    //         code += digit;
+    //     }
+    // }
+    code='1234'
     return code;
 }
 
