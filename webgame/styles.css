@@ -1,34 +1,57 @@
+/* Global styles */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f4f4f4;
+    background-color: #e9eff1;
 }
 
-.game-container {
+/* Container for layout */
+#container {
+    display: flex;
+    justify-content: space-around; /* Ensures even spacing around elements */
+    align-items: flex-start;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px; /* Adds padding inside the container */
+}
+
+/* Leaderboard and History sections */
+#leaderboard, #history {
+    padding: 15px;
     text-align: center;
-    background-color: #fff;
+    background-color: #f7f7f7;
+    border-radius: 15px;
+    color: #333;
+    max-height: 400px;
+    overflow-y: auto;
+    width: 25%; /* Adjust based on preference */
+    margin: 0 20px; /* Adds horizontal margin for spacing */
+}
+
+#game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    width: 350px;
+    width: 50%; /* Adjust based on preference */
+    margin: 0 20px; /* Adds horizontal margin for spacing */
 }
 
 input, button {
-    margin: 10px 0;
-    padding: 12px;
-    border-radius: 50px;
-    border: 2px solid #ddd;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 30px;
+    border: 1px solid #ccc;
     font-size: 16px;
-    width: 80%;
-    box-sizing: border-box; /* Include padding and border in element's width */
-}
-
-input {
-    transition: border-color 0.3s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 input:focus {
@@ -41,8 +64,6 @@ button {
     background-color: #007bff;
     color: white;
     border: none;
-    width: auto;
-    min-width: 100px;
     transition: background-color 0.3s;
     font-weight: bold;
 }
@@ -51,49 +72,10 @@ button:hover {
     background-color: #0056b3;
 }
 
-#response, #history {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    color: #333;
-}
-
-#history {
-    max-height: 200px;
-    overflow-y: auto;
-    text-align: left;
-}
-
-.history-entry {
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-}
-
-.history-entry:last-child {
-    border-bottom: none;
-}
-
 .warning {
-    color: red;
+    color: #d9534f;
     font-size: 14px;
     height: 20px;
     margin-top: -10px;
     margin-bottom: 10px;
-}
-#leaderboard {
-    margin-top: 20px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: left;
-}
-
-.leaderboard-entry {
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-}
-
-.leaderboard-entry:last-child {
-    border-bottom: none;
 }

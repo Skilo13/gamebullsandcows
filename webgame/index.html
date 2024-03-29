@@ -6,17 +6,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game">
-        <h1>Cows and Bulls Game</h1>
-        <input type="text" id="name" placeholder="Enter your name" />
-        <input type="text" id="guess" placeholder="Enter your 4-digit guess" maxlength="4">
-        <button id="guessBtn">Guess</button>
-        <div class="warning" id="warningText"></div>
-        <div id="response"></div>
-        <h2>History</h2>
-        <div id="history"></div>
-        <h2>Leaderboard</h2>
-        <div id="leaderboard"></div>
+    <div id="container">
+        <div id="leaderboard">
+            <h2>Leaderboard</h2>
+            <!-- Leaderboard content goes here -->
+        </div>
+        <div id="game">
+            <h1>Cows and Bulls Game</h1>
+            <input type="text" id="name" placeholder="Enter your name" />
+            <input type="text" id="guess" placeholder="Enter your 4-digit guess" maxlength="4">
+            <button id="guessBtn">Guess</button>
+            <div class="warning" id="warningText"></div>
+            <div id="response"></div>
+        </div>
+        <div id="history">
+            <h2>History</h2>
+            <!-- History content goes here -->
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
