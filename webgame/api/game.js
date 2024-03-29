@@ -1,4 +1,4 @@
-import { readLeaderboard, writeLeaderboard } from './leaderboard';
+import { readLeaderboard, writeLeaderboard } from '../db';
 
 let secretCode = generateSecretCode();
 let guessesHistory = [];
