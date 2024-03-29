@@ -1,14 +1,17 @@
 document.getElementById('guessBtn').addEventListener('click', async () => {
-    const nameInput = document.getElementById('name');
-    const name = nameInput.value.trim();
+    // The name is no longer needed since the leaderboard has been removed
+    // const nameInput = document.getElementById('name');
+    // const name = nameInput.value.trim();
+    
     const guessInput = document.getElementById('guess');
     const guess = guessInput.value;
     const warningText = document.getElementById('warningText');
 
-    if (!name) {
-        warningText.textContent = 'Please enter your name.';
-        return;
-    }
+    // The name validation can be removed as well
+    // if (!name) {
+    //     warningText.textContent = 'Please enter your name.';
+    //     return;
+    // }
 
     if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
         warningText.textContent = 'Please enter a 4-digit number with unique digits.';
@@ -18,11 +21,12 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
     }
 
     try {
-        console.log('Sending guess:', { name, guess });
+        // Since the name is no longer used, we only send the guess
+        console.log('Sending guess:', { guess });
         const response = await fetch('/api/game', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, guess })
+            body: JSON.stringify({ guess })
         });
         const data = await response.json();
         console.log('Received data:', data);
@@ -30,15 +34,18 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
         if (data.error) {
             warningText.textContent = data.error;
         } else {
+            // Update the text content to reflect only the guess results
             document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
             updateHistory(data.history);
-            updateLeaderboard(data.leaderboard);
+            // Since leaderboard is removed, no need to update it
+            // updateLeaderboard(data.leaderboard);
         }
     } catch (error) {
         console.error('Fetch error:', error);
         warningText.textContent = 'There was a problem processing your guess. Please try again.';
     }
 
+    // Clear input field after processing
     guessInput.value = '';
 });
 
@@ -53,13 +60,7 @@ function updateHistory(history) {
     });
 }
 
-function updateLeaderboard(leaderboard) {
-    const leaderboardElement = document.getElementById('leaderboard');
-    leaderboardElement.innerHTML = '';  // Clear existing leaderboard
-
-    leaderboard.forEach((entry, index) => {
-        const entryElement = document.createElement('div');
-        entryElement.textContent = `${index + 1}. ${entry.name}: ${entry.tries} tries`;
-        leaderboardElement.appendChild(entryElement);
-    });
-}
+// Since leaderboard functionality is removed, this function is no longer needed
+// function updateLeaderboard(leaderboard) {
+//     // ...
+// }

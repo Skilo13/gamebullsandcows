@@ -1,4 +1,4 @@
-import { readLeaderboard, writeLeaderboard } from '../db';
+// api/game.js
 
 let secretCode = generateSecretCode();
 let guessesHistory = [];
@@ -31,35 +31,29 @@ function checkForCode(secretCode, guess) {
     return { bulls, cows, isCorrect: bulls === 4 };
 }
 
-async function processGuess(name, guess, leaderboard) {
-    const { bulls, cows, isCorrect } = checkForCode(secretCode, guess);
-    let tries = guessesHistory.length + 1;
-    guessesHistory.push({ guess, bulls, cows });
+function processGuess(guess) {
+    const result = checkForCode(secretCode, guess);
+    guessesHistory.push({ guess, ...result });
 
-    if (isCorrect) {
+    if (result.isCorrect) {
+        // Generate a new secret code for the next game and clear history
         secretCode = generateSecretCode();
-        leaderboard[name] = (leaderboard[name] || 0) + tries;
-        tries = 0;
         guessesHistory = [];
     }
 
-
-
-    return { tries, bulls, cows, isCorrect };
+    return result;
 }
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
     if (req.method === 'POST') {
-        const { name, guess } = req.body;
-        
+        const { guess } = req.body;
+
         if (!guess || guess.length !== 4 || new Set(guess).size !== 4) {
             return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
         }
 
-
-
-
-        res.status(200).json({ ...result, history: guessesHistory, leaderboard });
+        const result = processGuess(guess);
+        res.status(200).json({ ...result, history: guessesHistory });
     } else {
         res.status(405).send('Method Not Allowed');
     }
