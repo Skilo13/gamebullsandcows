@@ -1,52 +1,32 @@
-// api/game.js
+// In your app.js or similar frontend file
 
-let secretCode = generateSecretCode();
+document.getElementById('guessBtn').addEventListener('click', async () => {
+    const guessInput = document.getElementById('guess');
+    const guess = guessInput.value;
+    guessInput.value = ''; // Clear input after getting the value
 
-function generateSecretCode() {
-    const digits = '0123456789';
-    let code = '';
-    while (code.length < 4) {
-        const randomIndex = Math.floor(Math.random() * digits.length);
-        const digit = digits[randomIndex];
-        if (!code.includes(digit)) {
-            code += digit;
-        }
-    }
-    return code;
-}
+    const response = await fetch('/api/game', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guess })
+    });
+    const data = await response.json();
 
-function checkForCode(secretCode, guess) {
-    let bulls = 0;
-    let cows = 0;
-
-    for (let i = 0; i < 4; i++) {
-        if (guess[i] === secretCode[i]) {
-            bulls++;
-        } else if (secretCode.includes(guess[i])) {
-            cows++;
-        }
-    }
-
-    return { bulls, cows, isCorrect: bulls === 4 };
-}
-
-export default function handler(req, res) {
-    if (req.method === 'POST') {
-        const { guess } = req.body;
-
-        if (!guess || guess.length !== 4 || new Set(guess).size !== 4) {
-            return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
-        }
-
-        const result = checkForCode(secretCode, guess);
-
-        if (result.isCorrect) {
-            // Reset secret code for the next game, in a real app you might handle this differently
-            secretCode = generateSecretCode();
-        }
-
-        res.status(200).json(result);
+    if (data.error) {
+        alert(data.error);
     } else {
-        res.status(405).json({ error: 'Method not allowed' });
+        document.getElementById('response').textContent = `Bulls: ${data.result.bulls}, Cows: ${data.result.cows}`;
+        updateHistory(data.history);
     }
+});
+
+function updateHistory(history) {
+    const historyElement = document.getElementById('history');
+    historyElement.innerHTML = '';  // Clear existing history
+
+    history.forEach((entry) => {
+        const entryElement = document.createElement('div');
+        entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.result.bulls}, Cows: ${entry.result.cows}`;
+        historyElement.appendChild(entryElement);
+    });
 }
