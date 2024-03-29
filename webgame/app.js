@@ -14,18 +14,19 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
         warningText.textContent = 'Please enter a 4-digit number with unique digits.';
         return;
     } else {
-        warningText.textContent = '';  // Clear the warning if the input is valid
+        warningText.textContent = '';
     }
 
     try {
+        console.log('Sending guess:', { name, guess });
         const response = await fetch('/api/game', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, guess })
         });
         const data = await response.json();
+        console.log('Received data:', data);
 
-        // Check if there is an error in the response
         if (data.error) {
             warningText.textContent = data.error;
         } else {
@@ -38,7 +39,7 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
         warningText.textContent = 'There was a problem processing your guess. Please try again.';
     }
 
-    guessInput.value = '';  // Clear input field after processing
+    guessInput.value = '';
 });
 
 function updateHistory(history) {
