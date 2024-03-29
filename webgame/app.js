@@ -1,22 +1,27 @@
-// In your app.js or similar frontend file
-
 document.getElementById('guessBtn').addEventListener('click', async () => {
     const guessInput = document.getElementById('guess');
     const guess = guessInput.value;
-    guessInput.value = ''; // Clear input after getting the value
+    guessInput.value = '';  // This clears the input field, which is correct.
 
-    const response = await fetch('/api/game', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guess })
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch('/api/game', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ guess })
+        });
 
-    if (data.error) {
-        alert(data.error);
-    } else {
+        const data = await response.json();
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
         document.getElementById('response').textContent = `Bulls: ${data.result.bulls}, Cows: ${data.result.cows}`;
         updateHistory(data.history);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        alert('There was a problem processing your guess. Please try again.');
     }
 });
 

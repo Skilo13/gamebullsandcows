@@ -1,32 +1,55 @@
-// In your app.js or similar frontend file
+// api/game.js
 
-document.getElementById('guessBtn').addEventListener('click', async () => {
-    const guessInput = document.getElementById('guess');
-    const guess = guessInput.value;
-    guessInput.value = ''; // Clear input after getting the value
+let secretCode = generateSecretCode();
+let guessesHistory = [];
 
-    const response = await fetch('/api/game', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guess })
-    });
-    const data = await response.json();
-
-    if (data.error) {
-        alert(data.error);
-    } else {
-        document.getElementById('response').textContent = `Bulls: ${data.result.bulls}, Cows: ${data.result.cows}`;
-        updateHistory(data.history);
+function generateSecretCode() {
+    const digits = '0123456789';
+    let code = '';
+    while (code.length < 4) {
+        const randomIndex = Math.floor(Math.random() * digits.length);
+        const digit = digits[randomIndex];
+        if (!code.includes(digit)) {
+            code += digit;
+        }
     }
-});
+    return code;
+}
 
-function updateHistory(history) {
-    const historyElement = document.getElementById('history');
-    historyElement.innerHTML = '';  // Clear existing history
+function checkForCode(secretCode, guess) {
+    let bulls = 0;
+    let cows = 0;
 
-    history.forEach((entry) => {
-        const entryElement = document.createElement('div');
-        entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.result.bulls}, Cows: ${entry.result.cows}`;
-        historyElement.appendChild(entryElement);
-    });
+    for (let i = 0; i < 4; i++) {
+        if (guess[i] === secretCode[i]) {
+            bulls++;
+        } else if (secretCode.includes(guess[i])) {
+            cows++;
+        }
+    }
+
+    return { bulls, cows, isCorrect: bulls === 4 };
+}
+
+export default function handler(req, res) {
+    if (req.method === 'POST') {
+        const { guess } = req.body;
+
+        if (!guess || guess.length !== 4 || new Set(guess).size !== 4) {
+            return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
+        }
+
+        const result = checkForCode(secretCode, guess);
+        guessesHistory.push({ guess, result });
+
+        if (result.isCorrect) {
+            // Reset for the next game
+            secretCode = generateSecretCode();
+            guessesHistory = [];  // Clear history for the new game
+        }
+
+        res.status(200).json({ result, history: guessesHistory });
+    } else {
+        res.status(405).json({ error: 'Method not allowed' });
+    }
 }
