@@ -61,6 +61,16 @@ function updateHistory(history) {
     });
 }
 
+window.addEventListener('load', () => {
+    // Clear specific storage or keys
+    localStorage.removeItem('historyKey'); // Replace 'historyKey' with the actual key used for storing history
+    // Or sessionStorage.removeItem('historyKey');
+});
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('yourFormId').reset();
+    // or if you want to clear specific input
+    document.getElementById('yourInputId').value = '';
+});
 
 // Since leaderboard functionality is removed, this function is no longer needed
 // function updateLeaderboard(leaderboard) {
