@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = document.getElementById('winModal');
         modal.style.display = 'block';
     }
+    
 
     function hideWinModal() {
         const modal = document.getElementById('winModal');

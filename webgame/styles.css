@@ -109,3 +109,40 @@ button:hover {
     padding: 10px;
     text-align: left;
 }
+#winModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    z-index: 1; /* Sit on top */
+}
+
+#winModalContent {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px; /* Maximum width */
+    text-align: center; /* Centered text */
+}
+
+/* Button inside the modal */
+#winModalContent button {
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding */
+    margin: 10px 0; /* Margin top and bottom */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer/hand icon */
+    width: auto; /* Automatic width based on content */
+    text-align: center; /* Centered text */
+}
+
+#winModalContent button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
