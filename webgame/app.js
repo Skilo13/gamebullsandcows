@@ -39,7 +39,9 @@ function updateHistory(history) {
 
     history.forEach((entry) => {
         const entryElement = document.createElement('div');
+        entryElement.className = 'history-entry';
         entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.result.bulls}, Cows: ${entry.result.cows}`;
         historyElement.appendChild(entryElement);
     });
 }
+
