@@ -1,17 +1,7 @@
 document.getElementById('guessBtn').addEventListener('click', async () => {
-    // The name is no longer needed since the leaderboard has been removed
-    // const nameInput = document.getElementById('name');
-    // const name = nameInput.value.trim();
-    
     const guessInput = document.getElementById('guess');
-    const guess = guessInput.value;
+    const guess = guessInput.value.trim();
     const warningText = document.getElementById('warningText');
-
-    // The name validation can be removed as well
-    // if (!name) {
-    //     warningText.textContent = 'Please enter your name.';
-    //     return;
-    // }
 
     if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
         warningText.textContent = 'Please enter a 4-digit number with unique digits.';
@@ -21,24 +11,22 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
     }
 
     try {
-        // Since the name is no longer used, we only send the guess
-        console.log('Sending guess:', { guess });
         const response = await fetch('/api/game', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ guess })
         });
         const data = await response.json();
-        console.log('Received data:', data);
 
         if (data.error) {
             warningText.textContent = data.error;
         } else {
-            // Update the text content to reflect only the guess results
             document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
             updateHistory(data.history);
-            // Since leaderboard is removed, no need to update it
-            // updateLeaderboard(data.leaderboard);
+            
+            if (data.isCorrect) {
+                showWinModal(guess);
+            }
         }
     } catch (error) {
         console.error('Fetch error:', error);
@@ -61,37 +49,6 @@ function updateHistory(history) {
     });
 }
 
-window.addEventListener('load', () => {
-    // Clear specific storage or keys
-    localStorage.removeItem('historyKey'); // Replace 'historyKey' with the actual key used for storing history
-    // Or sessionStorage.removeItem('historyKey');
-});
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('yourFormId').reset();
-    // or if you want to clear specific input
-    document.getElementById('yourInputId').value = '';
-});
-// Existing code to send the guess to the server
-const response = await fetch('/api/game', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ guess })
-});
-const data = await response.json();
-
-if (data.error) {
-    warningText.textContent = data.error;
-} else {
-    // Existing code to update the UI
-    document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
-    updateHistory(data.history);
-    
-    if (data.isCorrect) {
-        showWinModal(guess);
-    }
-}
-
-// Function to show the win modal
 function showWinModal(code) {
     const winCodeSpan = document.getElementById('winCode');
     winCodeSpan.textContent = code;
@@ -100,16 +57,19 @@ function showWinModal(code) {
     modal.style.display = 'block';
 }
 
-// Function to hide the win modal and reset the game
 function hideWinModal() {
     const modal = document.getElementById('winModal');
     modal.style.display = 'none';
 
     // Reset game state if necessary here
+    document.getElementById('guess').value = ''; // Clear the guess input field
+    document.getElementById('history').innerHTML = ''; // Clear the history
 }
-document.getElementById('guess').value = ''; // Clear the guess input field
-document.getElementById('history').innerHTML = ''; // Clear the history
-// Since leaderboard functionality is removed, this function is no longer needed
-// function updateLeaderboard(leaderboard) {
-//     // ...
-// }
+
+document.getElementById('playAgainBtn').addEventListener('click', hideWinModal);
+
+window.addEventListener('load', () => {
+    // Perform necessary initialization, like clearing storage or resetting form/input fields
+    document.getElementById('yourFormId').reset();  // Replace 'yourFormId' with the actual form ID
+    localStorage.removeItem('historyKey'); // Replace 'historyKey' with the actual key used for storing history
+});
