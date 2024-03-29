@@ -19,7 +19,7 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
 
     try {
         console.log('Sending guess:', { name, guess });
-        const response = await fetch('/api/game', {
+        const response = await fetch('/api/game.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, guess })
