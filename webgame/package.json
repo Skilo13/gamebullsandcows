@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@vercel/edge-config": "^1.1.0",
+    "@vercel/postgres": "^0.7.2",
     "mongodb": "^6.5.0"
   }
 }

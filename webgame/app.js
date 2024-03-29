@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let tries = 0; // Initialize the number of tries
+
     document.getElementById('guessBtn').addEventListener('click', async () => {
         const guessInput = document.getElementById('guess');
         const guess = guessInput.value.trim();
@@ -10,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             warningText.textContent = '';
         }
+
+        tries++; // Increment tries on each guess
 
         try {
             const response = await fetch('/api/game', {
@@ -24,9 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
                 updateHistory(data.history);
-                
+
                 if (data.isCorrect) {
-                    showWinModal(guess);
+                    showWinModal();
+                    // Note: Do not reset tries here as it's needed for saving
                 }
             }
         } catch (error) {
@@ -34,12 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
             warningText.textContent = 'There was a problem processing your guess. Please try again.';
         }
 
-        guessInput.value = '';  // Clear input field after processing
+        guessInput.value = ''; // Clear input field after processing
     });
 
     function updateHistory(history) {
         const historyEntriesElement = document.querySelector('.history-entries');
-        historyEntriesElement.innerHTML = '';  // Clear existing history entries
+        historyEntriesElement.innerHTML = ''; // Clear existing history entries
 
         history.forEach(entry => {
             const entryElement = document.createElement('div');
@@ -49,32 +54,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function showWinModal(code) {
-        const winCodeSpan = document.getElementById('winCode');
-        winCodeSpan.textContent = code;
-        
+    function showWinModal() {
         const modal = document.getElementById('winModal');
         modal.style.display = 'block';
     }
-    
+
+    document.getElementById('saveScoreBtn').addEventListener('click', async () => {
+        const nameInput = document.getElementById('playerName');
+        const name = nameInput.value.trim();
+        if (!name) {
+            alert('Please enter your name.');
+            return;
+        }
+
+        await saveScore(name, tries);
+        loadLeaderboard();
+        hideWinModal();
+        // Reset the tries for the new game
+        tries = 0;
+    });
 
     function hideWinModal() {
         const modal = document.getElementById('winModal');
         modal.style.display = 'none';
-
-        // Reset game state if necessary here
-        const guessInput = document.getElementById('guess');
-        guessInput.value = '';  // Clear the guess input field
-
-        // To ensure that the history is not cleared completely, fetch or initialize the new history
-        // This should be handled by fetching new history data or initializing it if the game is reset
     }
 
-    document.getElementById('playAgainBtn').addEventListener('click', () => {
-        hideWinModal();
+    async function saveScore(name, tries) {
+        try {
+            const response = await fetch('/api/leaderboard', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, tries })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            console.log(result.message);
+        } catch (error) {
+            console.error('Failed to save score:', error);
+        }
+    }
 
-        // Reset the game's state and prepare for a new game
-        // This may involve fetching new game state from the server or resetting local variables
-        updateHistory([]);  // Clear the history view, or fetch new history as needed
-    });
+    async function loadLeaderboard() {
+        try {
+            const response = await fetch('/api/leaderboard');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const leaderboardData = await response.json();
+            displayLeaderboard(leaderboardData);
+        } catch (error) {
+            console.error('Failed to load leaderboard:', error);
+        }
+    }
+
+    function displayLeaderboard(leaderboardData) {
+        const leaderboardElement = document.getElementById('leaderboard');
+        leaderboardElement.innerHTML = '<h2>Leaderboard</h2>'; // Reset leaderboard title
+
+        leaderboardData.forEach(entry => {
+            const entryElement = document.createElement('div');
+            entryElement.textContent = `${entry.name}: ${entry.tries} tries`;
+            leaderboardElement.appendChild(entryElement);
+        });
+    }
+
+    // Initial load of the leaderboard
+    loadLeaderboard();
 });
