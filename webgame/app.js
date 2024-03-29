@@ -1,8 +1,16 @@
 document.getElementById('guessBtn').addEventListener('click', async () => {
     const guessInput = document.getElementById('guess');
+    const warningText = document.getElementById('warningText');
     const guess = guessInput.value;
-    guessInput.value = '';  // This clears the input field, which is correct.
 
+    if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
+        warningText.textContent = 'Please enter a 4-digit number with unique digits.';
+        return;
+    } else {
+        warningText.textContent = '';  // Clear the warning if the input is valid
+    }
+
+    guessInput.value = '';  // Clear input after validation
     try {
         const response = await fetch('/api/game', {
             method: 'POST',
