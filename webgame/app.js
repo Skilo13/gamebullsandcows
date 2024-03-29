@@ -73,6 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset the tries for the new game
         tries = 0;
     });
+    document.getElementById('playAgainBtn').addEventListener('click', () => {
+        hideWinModal();
+    
+        // Reset the game's state and prepare for a new game
+        tries = 0; // Reset the number of tries for a new game
+        updateHistory([]);  // Clear the history view
+    });
+    
 
     function hideWinModal() {
         const modal = document.getElementById('winModal');
@@ -104,10 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const leaderboardData = await response.json();
             displayLeaderboard(leaderboardData);
+    
+            // After leaderboard is loaded, clear the history
+            updateHistory([]);
         } catch (error) {
             console.error('Failed to load leaderboard:', error);
         }
     }
+    
 
     function displayLeaderboard(leaderboardData) {
         const leaderboardElement = document.getElementById('leaderboard');
@@ -120,6 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+
     // Initial load of the leaderboard
     loadLeaderboard();
+    updateHistory([]);
 });
