@@ -258,6 +258,7 @@ button:hover {
     padding: 15px; /* Padding inside the leaderboard */
     max-width: 300px; /* Maximum width of the leaderboard */
     margin: auto; /* Center the leaderboard horizontally */
+    align-items: center;
 }
 
 .leaderboard-entry {
