@@ -81,3 +81,19 @@ button:hover {
     margin-top: -10px;
     margin-bottom: 10px;
 }
+#leaderboard {
+    margin-top: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: left;
+}
+
+.leaderboard-entry {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-entry:last-child {
+    border-bottom: none;
+}

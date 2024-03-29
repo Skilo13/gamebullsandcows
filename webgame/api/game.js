@@ -1,4 +1,26 @@
 // api/game.js
+import { readLeaderboard, writeLeaderboard } from './leaderboard';
+
+export default async function (req, res) {
+    if (req.method === 'POST') {
+        const { name, guess } = req.body;
+        let leaderboard = await readLeaderboard();
+
+        // Process the guess, update the leaderboard
+        // Assume `processGuess` is a function that returns the number of tries and updates the secret code
+        const { tries, isCorrect } = processGuess(name, guess, leaderboard);
+
+        if (isCorrect) {
+            // Update leaderboard if the guess is correct
+            leaderboard[name] = (leaderboard[name] || 0) + tries;
+            await writeLeaderboard(leaderboard);
+        }
+
+        res.json({ name, tries, leaderboard });
+    } else {
+        res.status(405).send('Method Not Allowed');
+    }
+}
 
 let secretCode = generateSecretCode();
 let guessesHistory = [];
