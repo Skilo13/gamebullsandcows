@@ -1,6 +1,3 @@
-// api/game.js
-
-// Assuming 'readLeaderboard' and 'writeLeaderboard' are defined in 'leaderboard.js'
 import { readLeaderboard, writeLeaderboard } from './leaderboard';
 
 let secretCode = generateSecretCode();
@@ -36,14 +33,14 @@ function checkForCode(secretCode, guess) {
 
 async function processGuess(name, guess, leaderboard) {
     const { bulls, cows, isCorrect } = checkForCode(secretCode, guess);
-    let tries = guessesHistory.length + 1; // Increment tries
+    let tries = guessesHistory.length + 1;
     guessesHistory.push({ guess, bulls, cows });
 
     if (isCorrect) {
-        secretCode = generateSecretCode(); // Generate a new secret code for the next game
+        secretCode = generateSecretCode();
         leaderboard[name] = (leaderboard[name] || 0) + tries;
-        tries = 0; // Reset tries for the next game
-        guessesHistory = []; // Clear history for the new game
+        tries = 0;
+        guessesHistory = [];
     }
 
     await writeLeaderboard(leaderboard);
@@ -54,6 +51,7 @@ async function processGuess(name, guess, leaderboard) {
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { name, guess } = req.body;
+        
         if (!guess || guess.length !== 4 || new Set(guess).size !== 4) {
             return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
         }
