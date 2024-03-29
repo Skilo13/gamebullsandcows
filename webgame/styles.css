@@ -8,7 +8,58 @@ body {
     margin: 0;
     background-color: #e9eff1;
 }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+/* Header styles */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; /* Ensure the header is on top of other content */
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#headerContent {
+    display: flex;
+    gap: 10px;
+}
+
+/* Button styles */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #f8f9fa;
+}
+
+/* Active button style */
+button.active {
+    background-color: #007bff;
+    color: black;
+}
 /* Container for layout */
 #container {
     display: flex;
@@ -42,6 +93,53 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     width: 50%; /* Adjust based on preference */
     margin: 0 20px; /* Adds horizontal margin for spacing */
+}
+#instructions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 50%; /* Adjust based on preference */
+    margin: 0 20px; /* Adds horizontal margin for spacing */
+}
+
+#instructions h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#instructions p {
+    margin-bottom: 15px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+#instructions ul {
+    margin-bottom: 15px;
+    padding-left: 30px;
+}
+
+#instructions li {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+#instructions button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#instructions button:hover {
+    background-color: #45a049;
 }
 
 input, button {

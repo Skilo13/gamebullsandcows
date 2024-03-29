@@ -1,4 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Select header buttons
+    const gameSectionBtn = document.getElementById('gameSectionBtn');
+    const instructionsSectionBtn = document.getElementById('instructionsSectionBtn');
+
+    // Select sections to switch between
+    const gameSection = document.getElementById('game');
+    const instructionsSection = document.getElementById('instructions'); // Updated ID for instructions section
+
+    // Add event listener to the game section button
+    gameSectionBtn.addEventListener('click', () => {
+        gameSection.style.display = 'block';
+        instructionsSection.style.display = 'none';
+        gameSectionBtn.classList.add('active');
+        instructionsSectionBtn.classList.remove('active');
+    });
+
+    // Add event listener to the instructions section button
+    instructionsSectionBtn.addEventListener('click', () => {
+        gameSection.style.display = 'none';
+        instructionsSection.style.display = 'block';
+        gameSectionBtn.classList.remove('active');
+        instructionsSectionBtn.classList.add('active');
+    });
+
+    // Initial display: game section active, instructions section hidden
+    gameSection.style.display = 'block';
+    instructionsSection.style.display = 'none';
+    gameSectionBtn.classList.add('active');
+    instructionsSectionBtn.classList.remove('active');
+});
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
     let tries = 0;
     let history = []; // Initialize an empty history array
 
@@ -18,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const entryElement = document.createElement('div');
             entryElement.className = 'history-entry';
             entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            historyEntriesElement.appendChild(entryElement);
+            historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
         });
     }
     clearGameState();

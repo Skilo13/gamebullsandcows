@@ -6,18 +6,33 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <h1>Cows and Bulls Game</h1>
+        <div id="headerContent">
+            <button id="gameSectionBtn">Game</button>
+            <button id="instructionsSectionBtn">Instructions</button>
+        </div>
+    </header>
     <div id="container">
         <div id="leaderboard">
             <h2>Leaderboard</h2>
             <!-- Leaderboard content goes here -->
         </div>
         <div id="game">
-            <h1>Cows and Bulls Game 1</h1>
-            <input type="text" id="name" placeholder="Enter your name" />
+            <h1>Cows and Bulls Game</h1>
             <input type="text" id="guess" placeholder="Enter your 4-digit guess" maxlength="4">
             <button id="guessBtn">Guess</button>
             <div class="warning" id="warningText"></div>
             <div id="response"></div>
+        </div>
+        <div id="instructions">
+            <h2>Instructions (English)</h2>
+            <p>This is the game of Cows and Bulls. The computer generates a secret 4-digit code with unique digits, and your goal is to guess the code. For each guess, you will receive feedback in the form of Bulls and Cows:</p>
+            <ul>
+            <li>A Bull indicates a correct digit in the correct position.</li>
+            <li>A Cow indicates a correct digit in the wrong position.</li>
+            </ul>
+            <p>Use the input field to enter your 4-digit guess and click the Guess button. Good luck!</p>
         </div>
         <!-- Win Modal Structure -->
         <div id="winModal" >
