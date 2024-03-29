@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tries++; // Increment tries on each guess
 
         try {
-            const response = await fetch('/api/game', {
+            const response = await fetch('/api/main', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ guess })
