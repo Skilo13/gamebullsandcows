@@ -18,7 +18,7 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
     }
 
     try {
-        const response = await fetch('http://https://gamebullsandcows.vercel.app/api/game', {
+        const response = await fetch('https://gamebullsandcows.vercel.app/api/game', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, guess })
