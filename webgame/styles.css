@@ -84,6 +84,7 @@ button.active {
 }
 
 #game {
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -183,6 +184,7 @@ button:hover {
     flex-direction: column;
     max-height: 400px;
     overflow: hidden;
+    margin: auto;
 }
 
 #history h2 {
@@ -249,9 +251,9 @@ button:hover {
 }
 #leaderboard {
     text-align: left;
-    margin-top: 20px; /* Add some space from the top */
+    margin-top: 0px; /* Add some space from the top */
     background: #f3f3f3; /* Light grey background */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
     padding: 15px; /* Padding inside the leaderboard */
     max-width: 300px; /* Maximum width of the leaderboard */
@@ -262,7 +264,7 @@ button:hover {
     background: #ffffff; /* White background for each entry */
     padding: 10px;
     margin-bottom: 10px; /* Space between entries */
-    border-radius: 4px; /* Rounded corners for each entry */
+    border-radius: 10px; /* Rounded corners for each entry */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for each entry */
     display: flex;
     justify-content: space-between; /* Space out name and score */
