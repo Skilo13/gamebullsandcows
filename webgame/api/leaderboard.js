@@ -1,25 +1,36 @@
-import { sql } from '@vercel/postgres';
+const { Pool } = require('pg');
 
-export default async function handler(req, res) {
+// Connect to the PostgreSQL pool
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true } : false
+});
+
+module.exports = async (req, res) => {
   if (req.method === 'GET') {
     try {
-      const result = await sql`SELECT * FROM leaderboard ORDER BY tries ASC LIMIT 10`;
-      return res.status(200).json(result);
+      // Query the database to get the top scores
+      const result = await pool.query('SELECT * FROM leaderboard ORDER BY tries ASC LIMIT 10');
+      res.status(200).json(result.rows);
     } catch (error) {
+      // If there's a database error, log it and send a server error response
       console.error('Error fetching leaderboard:', error);
-      return res.status(500).json({ message: 'Error fetching leaderboard' });
+      res.status(500).json({ error: 'Failed to load leaderboard' });
     }
   } else if (req.method === 'POST') {
     try {
+      // Extract the name and tries from the request body
       const { name, tries } = req.body;
-      await sql`INSERT INTO leaderboard (name, tries) VALUES (${name}, ${tries})`;
-      return res.status(201).json({ message: 'Score added to leaderboard' });
+      // Insert the new score into the database
+      await pool.query('INSERT INTO leaderboard (name, tries) VALUES ($1, $2)', [name, tries]);
+      res.status(201).json({ message: 'Score saved to leaderboard' });
     } catch (error) {
+      // If there's a database error, log it and send a server error response
       console.error('Error saving to leaderboard:', error);
-      return res.status(500).json({ message: 'Error saving to leaderboard' });
+      res.status(500).json({ error: 'Failed to save score' });
     }
   } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+    // If the HTTP method is not GET or POST, return a 405 Method Not Allowed error
+    res.status(405).json({ error: 'Method not allowed' });
   }
-}
+};
