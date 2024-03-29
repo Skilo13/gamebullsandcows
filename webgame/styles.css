@@ -244,8 +244,11 @@ button:hover {
 #winModalContent button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
-#leaderboard {
+#leaderboard h2{
     text-align: center;
+}
+#leaderboard {
+    text-align: left;
     margin-top: 20px; /* Add some space from the top */
     background: #f3f3f3; /* Light grey background */
     border-radius: 8px; /* Rounded corners */
@@ -253,7 +256,6 @@ button:hover {
     padding: 15px; /* Padding inside the leaderboard */
     max-width: 300px; /* Maximum width of the leaderboard */
     margin: auto; /* Center the leaderboard horizontally */
-    text-align: left; /* Align text to the left */
 }
 
 .leaderboard-entry {
