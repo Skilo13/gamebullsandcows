@@ -71,7 +71,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // or if you want to clear specific input
     document.getElementById('yourInputId').value = '';
 });
+// Existing code to send the guess to the server
+const response = await fetch('/api/game', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ guess })
+});
+const data = await response.json();
 
+if (data.error) {
+    warningText.textContent = data.error;
+} else {
+    // Existing code to update the UI
+    document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
+    updateHistory(data.history);
+    
+    if (data.isCorrect) {
+        showWinModal(guess);
+    }
+}
+
+// Function to show the win modal
+function showWinModal(code) {
+    const winCodeSpan = document.getElementById('winCode');
+    winCodeSpan.textContent = code;
+    
+    const modal = document.getElementById('winModal');
+    modal.style.display = 'block';
+}
+
+// Function to hide the win modal and reset the game
+function hideWinModal() {
+    const modal = document.getElementById('winModal');
+    modal.style.display = 'none';
+
+    // Reset game state if necessary here
+}
+document.getElementById('guess').value = ''; // Clear the guess input field
+document.getElementById('history').innerHTML = ''; // Clear the history
 // Since leaderboard functionality is removed, this function is no longer needed
 // function updateLeaderboard(leaderboard) {
 //     // ...
