@@ -188,14 +188,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayLeaderboard(leaderboardData) {
         const leaderboardElement = document.getElementById('leaderboard');
         leaderboardElement.innerHTML = '<h2>Leaderboard</h2>'; // Reset leaderboard title
-
+    
         leaderboardData.forEach(entry => {
             const entryElement = document.createElement('div');
-            entryElement.textContent = `${entry.name}: ${entry.tries} tries`;
+            entryElement.className = 'leaderboard-entry';
+    
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'name';
+            nameSpan.textContent = entry.name;
+    
+            const scoreSpan = document.createElement('span');
+            scoreSpan.className = 'score';
+            scoreSpan.textContent = `${entry.tries} tries`;
+    
+            entryElement.appendChild(nameSpan);
+            entryElement.appendChild(scoreSpan);
+    
             leaderboardElement.appendChild(entryElement);
         });
     }
-
+    
 
 
     // Initial load of the leaderboard

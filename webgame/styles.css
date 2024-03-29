@@ -244,3 +244,35 @@ button:hover {
 #winModalContent button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+#leaderboard {
+    margin-top: 20px; /* Add some space from the top */
+    background: #f3f3f3; /* Light grey background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    padding: 15px; /* Padding inside the leaderboard */
+    max-width: 300px; /* Maximum width of the leaderboard */
+    margin: auto; /* Center the leaderboard horizontally */
+    text-align: left; /* Align text to the left */
+}
+
+.leaderboard-entry {
+    background: #ffffff; /* White background for each entry */
+    padding: 10px;
+    margin-bottom: 10px; /* Space between entries */
+    border-radius: 4px; /* Rounded corners for each entry */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for each entry */
+    display: flex;
+    justify-content: space-between; /* Space out name and score */
+    align-items: center;
+}
+
+.leaderboard-entry:last-child {
+    margin-bottom: 0; /* No margin for the last entry */
+}
+
+/* Style the name and score within each leaderboard entry */
+.leaderboard-entry .name,
+.leaderboard-entry .score {
+    font-size: 1rem; /* Reasonable font size */
+    font-weight: bold; /* Make the text bold */
+}
