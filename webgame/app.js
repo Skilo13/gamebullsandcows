@@ -1,6 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let tries = 0; // Initialize the number of tries
+    let tries = 0;
+    let history = []; // Initialize an empty history array
 
+    // Function to clear the game state on page load
+    function clearGameState() {
+        tries = 0; // Reset tries
+        history = []; // Reset history
+        updateHistoryDisplay(history); // Clear the history display
+    }
+
+    // Function to update the history section on the page
+    function updateHistoryDisplay(history) {
+        const historyEntriesElement = document.querySelector('.history-entries');
+        historyEntriesElement.innerHTML = ''; // Clear existing history entries
+
+        history.forEach(entry => {
+            const entryElement = document.createElement('div');
+            entryElement.className = 'history-entry';
+            entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
+            historyEntriesElement.appendChild(entryElement);
+        });
+    }
+    clearGameState();
+    loadLeaderboard();
+    
     document.getElementById('guessBtn').addEventListener('click', async () => {
         const guessInput = document.getElementById('guess');
         const guess = guessInput.value.trim();
@@ -27,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 warningText.textContent = data.error;
             } else {
                 document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
-                updateHistory(data.history);
+                history.push({ guess: guess, ...data }); // Assume data contains bulls and cows
+                updateHistoryDisplay(history); // Update the display with the new history entry
 
                 if (data.isCorrect) {
                     showWinModal();
@@ -71,15 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         loadLeaderboard();
         hideWinModal();
         // Reset the tries for the new game
-        tries = 0;
+        clearGameState();
     });
+
     document.getElementById('playAgainBtn').addEventListener('click', () => {
         hideWinModal();
-    
-        // Reset the game's state and prepare for a new game
-        tries = 0; // Reset the number of tries for a new game
-        updateHistory([]);  // Clear the history view
+        clearGameState(); // Clear the game state when playing again
+        loadLeaderboard(); // Refresh the leaderboard
     });
+
     
 
     function hideWinModal() {
@@ -137,4 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load of the leaderboard
     loadLeaderboard();
     updateHistory([]);
+    function clearGameState() {
+        tries = 0; // Reset tries
+        history = []; // Reset history
+        updateHistoryDisplay(history); // Clear the history display
+    }
+
+    // Call the clearGameState function to reset everything when the page loads
+    clearGameState();
 });
