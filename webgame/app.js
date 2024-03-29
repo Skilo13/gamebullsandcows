@@ -50,15 +50,17 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
 });
 
 function updateHistory(history) {
-    const historyElement = document.getElementById('history');
+    const historyElement = document.querySelector('.history-entries');
     historyElement.innerHTML = '';  // Clear existing history
 
     history.forEach(entry => {
         const entryElement = document.createElement('div');
+        entryElement.className = 'history-entry';
         entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
         historyElement.appendChild(entryElement);
     });
 }
+
 
 // Since leaderboard functionality is removed, this function is no longer needed
 // function updateLeaderboard(leaderboard) {
