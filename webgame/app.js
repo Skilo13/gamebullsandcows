@@ -1,5 +1,10 @@
+// In your app.js or similar frontend file
+
 document.getElementById('guessBtn').addEventListener('click', async () => {
-    const guess = document.getElementById('guess').value;
+    const guessInput = document.getElementById('guess');
+    const guess = guessInput.value;
+    guessInput.value = ''; // Clear input after getting the value
+
     const response = await fetch('/api/game', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -7,5 +12,21 @@ document.getElementById('guessBtn').addEventListener('click', async () => {
     });
     const data = await response.json();
 
-    document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
+    if (data.error) {
+        alert(data.error);
+    } else {
+        document.getElementById('response').textContent = `Bulls: ${data.result.bulls}, Cows: ${data.result.cows}`;
+        updateHistory(data.history);
+    }
 });
+
+function updateHistory(history) {
+    const historyElement = document.getElementById('history');
+    historyElement.innerHTML = '';  // Clear existing history
+
+    history.forEach((entry) => {
+        const entryElement = document.createElement('div');
+        entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.result.bulls}, Cows: ${entry.result.cows}`;
+        historyElement.appendChild(entryElement);
+    });
+}
