@@ -9,21 +9,19 @@ app.use(session({
     saveUninitialized: false  // Set to false to create a session only when modified
 }));
 
-// function generateSecretCode() {
-//     const digits = '0123456789';
-//     let code = '';
-//     while (code.length < 4) {
-//         const randomIndex = Math.floor(Math.random() * digits.length);
-//         const digit = digits[randomIndex];
-//         if (!code.includes(digit)) {
-//             code += digit;
-//         }
-//     }
-//     return code;
-// }
 function generateSecretCode() {
-    return '1234';
+    const digits = '0123456789';
+    let code = '';
+    while (code.length < 4) {
+        const randomIndex = Math.floor(Math.random() * digits.length);
+        const digit = digits[randomIndex];
+        if (!code.includes(digit)) {
+            code += digit;
+        }
+    }
+    return code;
 }
+
 
 function checkForCode(secretCode, guess) {
     let bulls = 0;
