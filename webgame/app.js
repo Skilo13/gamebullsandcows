@@ -101,27 +101,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saveScoreBtn').addEventListener('click', async () => {
         const nameInput = document.getElementById('playerName');
         const name = nameInput.value.trim();
+        const triesText = document.getElementById('numTries'); // Get tries from the DOM
+        const tries = triesText.textContent; // Assuming this contains the correct number of tries
         if (!name) {
             alert('Please enter your name.');
             return;
         }
-        try {
-            const response = await fetch('/api/main');
-            const result = await response.json();
-            if (result.error) {
-                warningText.textContent = result.error;
-            } else {
-                tries=result.tries;
-                await saveScore(name, tries);
-                loadLeaderboard();
-                hideWinModal();
-                // Reset the tries for the new game
-                clearGameState();
-            }
-        } catch (error) {
-            console.error('There was a problem processing your save', error);
-            warningText.textContent = 'There was a problem processing your save. Please try again.';
-        }
+        
+        await saveScore(name, tries);
+        loadLeaderboard();
+        hideWinModal();
+        // Reset the tries for the new game
+        clearGameState();
+            
+        
         
     });
 
@@ -160,10 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const result = await response.json();
             console.log(result.message);
+            // Consider updating UI based on successful save or showing a message
         } catch (error) {
             console.error('Failed to save score:', error);
+            // Show an error message to the user
         }
-    }
+    }    
 
     async function loadLeaderboard() {
         try {
