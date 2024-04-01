@@ -1,103 +1,102 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('DOMContentLoaded', () => {
-        const gameSectionBtn = document.getElementById('gameSectionBtn');
-        const instructionsSectionBtn = document.getElementById('instructionsSectionBtn');
-        const gameSection = document.getElementById('game');
-        const instructionsSection = document.getElementById('instructions');
-    
-        gameSectionBtn.addEventListener('click', () => {
-            gameSection.style.display = 'block';
-            instructionsSection.style.display = 'none';
-            gameSectionBtn.classList.add('active');
-            instructionsSectionBtn.classList.remove('active');
-        });
-    
-        instructionsSectionBtn.addEventListener('click', () => {
-            gameSection.style.display = 'none';
-            instructionsSection.style.display = 'block';
-            gameSectionBtn.classList.remove('active');
-            instructionsSectionBtn.classList.add('active');
-        });
-    
+    const gameSectionBtn = document.getElementById('gameSectionBtn');
+    const instructionsSectionBtn = document.getElementById('instructionsSectionBtn');
+    const gameSection = document.getElementById('game');
+    const instructionsSection = document.getElementById('instructions');
+
+    gameSectionBtn.addEventListener('click', () => {
         gameSection.style.display = 'block';
         instructionsSection.style.display = 'none';
         gameSectionBtn.classList.add('active');
         instructionsSectionBtn.classList.remove('active');
-    
-        function updateHistoryDisplay(history) {
-            const historyEntriesElement = document.querySelector('.history-entries');
-            historyEntriesElement.innerHTML = '';
-    
-            history.forEach(entry => {
-                const entryElement = document.createElement('div');
-                entryElement.className = 'history-entry';
-                entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-                historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
-            });
-        }
-    
-        async function fetchGameStatus() {
-            try {
-                const response = await fetch('/api/main');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const { tries, history } = await response.json();
-                document.getElementById('numTries').textContent = tries;
-                updateHistoryDisplay(history);
-            } catch (error) {
-                console.error('Failed to fetch game status:', error);
-            }
-        }
-    
-        fetchGameStatus();
-    
-        document.getElementById('guessBtn').addEventListener('click', async () => {
-            const guessInput = document.getElementById('guess');
-            const guess = guessInput.value.trim();
-            const warningText = document.getElementById('warningText');
-    
-            if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
-                warningText.textContent = 'Please enter a 4-digit number with unique digits.';
-                return;
-            }
-    
-            warningText.textContent = '';
-    
-            try {
-                const response = await fetch('/api/main', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ guess })
-                });
-                const result = await response.json();
-    
-                if (result.error) {
-                    warningText.textContent = result.error;
-                } else {
-                    document.getElementById('response').textContent = `Bulls: ${result.bulls}, Cows: ${result.cows}`;
-                    fetchGameStatus();
-    
-                    if (result.isCorrect) {
-                        showWinModal(result.secretCode, result.tries);
-                    }
-                }
-            } catch (error) {
-                console.error('There was a problem processing your guess:', error);
-                warningText.textContent = 'There was a problem processing your guess. Please try again.';
-            }
-    
-            guessInput.value = '';
+    });
+
+    instructionsSectionBtn.addEventListener('click', () => {
+        gameSection.style.display = 'none';
+        instructionsSection.style.display = 'block';
+        gameSectionBtn.classList.remove('active');
+        instructionsSectionBtn.classList.add('active');
+    });
+
+    gameSection.style.display = 'block';
+    instructionsSection.style.display = 'none';
+    gameSectionBtn.classList.add('active');
+    instructionsSectionBtn.classList.remove('active');
+
+    function updateHistoryDisplay(history) {
+        const historyEntriesElement = document.querySelector('.history-entries');
+        historyEntriesElement.innerHTML = '';
+
+        history.forEach(entry => {
+            const entryElement = document.createElement('div');
+            entryElement.className = 'history-entry';
+            entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
+            historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
         });
-    
-        function showWinModal(secretCode, tries) {
-            document.getElementById('winCode').textContent = secretCode;
+    }
+
+    async function fetchGameStatus() {
+        try {
+            const response = await fetch('/api/main');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const { tries, history } = await response.json();
             document.getElementById('numTries').textContent = tries;
-            const modal = document.getElementById('winModal');
-            modal.style.display = 'block';
+            updateHistoryDisplay(history);
+        } catch (error) {
+            console.error('Failed to fetch game status:', error);
         }
+    }
+
+    fetchGameStatus();
+
+    document.getElementById('guessBtn').addEventListener('click', async () => {
+        const guessInput = document.getElementById('guess');
+        const guess = guessInput.value.trim();
+        const warningText = document.getElementById('warningText');
+
+        if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
+            warningText.textContent = 'Please enter a 4-digit number with unique digits.';
+            return;
+        }
+
+        warningText.textContent = '';
+
+        try {
+            const response = await fetch('/api/main', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ guess })
+            });
+            const result = await response.json();
+
+            if (result.error) {
+                warningText.textContent = result.error;
+            } else {
+                document.getElementById('response').textContent = `Bulls: ${result.bulls}, Cows: ${result.cows}`;
+                fetchGameStatus();
+
+                if (result.isCorrect) {
+                    showWinModal(result.secretCode, result.tries);
+                }
+            }
+        } catch (error) {
+            console.error('There was a problem processing your guess:', error);
+            warningText.textContent = 'There was a problem processing your guess. Please try again.';
+        }
+
+        guessInput.value = '';
+    });
+
+    function showWinModal(secretCode, tries) {
+        document.getElementById('winCode').textContent = secretCode;
+        document.getElementById('numTries').textContent = tries;
+        const modal = document.getElementById('winModal');
+        modal.style.display = 'block';
+    }
 
     document.getElementById('saveScoreBtn').addEventListener('click', async () => {
         const nameInput = document.getElementById('playerName');
