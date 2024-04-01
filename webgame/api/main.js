@@ -36,26 +36,30 @@ function checkForCode(secretCode, guess) {
 }
 
 app.post('/api/main', (req, res) => {
-    // Generate a new secret code if there isn't one for the session or if the previous game was completed
-    if (!req.session.secretCode || req.session.isCorrect) {
+    // Initialize secretCode and guessesHistory if they don't exist in the session
+    if (typeof req.session.secretCode === 'undefined' || req.session.isCorrect) {
         req.session.secretCode = generateSecretCode();
         req.session.guessesHistory = [];
-        req.session.isCorrect = false; // Reset the game completion flag
+        req.session.isCorrect = false; // Reset this flag for a new game
     }
 
     const { guess } = req.body;
 
+    // Check if the guess is not valid
     if (!guess || guess.length !== 4 || new Set(guess).size !== 4) {
         return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
     }
 
+    // Process the guess
     const result = checkForCode(req.session.secretCode, guess);
     req.session.guessesHistory.push({ guess, ...result });
 
+    // Check if the game has been won
     if (result.isCorrect) {
-        req.session.isCorrect = true;
+        req.session.isCorrect = true; // Set this flag when the game is won
     }
 
+    // Return the result and history
     res.status(200).json({ ...result, history: req.session.guessesHistory });
 });
 

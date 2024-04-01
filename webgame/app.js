@@ -138,11 +138,24 @@ document.addEventListener('DOMContentLoaded', () => {
         clearGameState();
     });
 
-    document.getElementById('playAgainBtn').addEventListener('click', () => {
-        hideWinModal();
-        clearGameState(); // Clear the game state when playing again
-        loadLeaderboard(); // Refresh the leaderboard
+    document.getElementById('playAgainBtn').addEventListener('click', async () => {
+        // Signal the server to start a new game
+        try {
+            const response = await fetch('/api/main', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ startNewGame: true })
+            });
+            const data = await response.json();
+            // Handle the response for a new game here
+            // Update the UI accordingly
+            hideWinModal();
+            clearGameState();
+        } catch (error) {
+            console.error('Error starting a new game:', error);
+        }
     });
+    
 
     
 
