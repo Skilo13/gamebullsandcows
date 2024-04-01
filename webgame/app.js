@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetchGameStatus();
 
                 if (result.isCorrect) {
-                    showWinModal(result.secretCode, result.tries);
+                    showWinModal(req.session.secretCode, result.tries);
                 }
             }
         } catch (error) {
