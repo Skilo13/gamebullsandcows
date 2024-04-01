@@ -101,6 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saveScoreBtn').addEventListener('click', async () => {
         const nameInput = document.getElementById('playerName');
         const name = nameInput.value.trim();
+        if (name.length < 3) {
+            alert('Please enter a name with at least 3 characters.');
+            return;
+        }
         try {
             // Fetch the current game state to get the latest tries count
             const gameStateResponse = await fetch('/api/main');
