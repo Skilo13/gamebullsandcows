@@ -38,7 +38,7 @@ function checkForCode(secretCode, guess) {
 }
 
 app.post('/api/main', (req, res) => {
-    if (!req.session.secretCode) {
+    if (!req.session.secretCode || req.session.isCorrect) {
         req.session.secretCode = generateSecretCode();
         req.session.guessesHistory = [];
     }
@@ -53,8 +53,11 @@ app.post('/api/main', (req, res) => {
     req.session.guessesHistory.push({ guess, ...result });
 
     if (result.isCorrect) {
-        req.session.secretCode = generateSecretCode();
+        req.session.isCorrect = true;  // Mark the session as won
+        req.session.secretCode = generateSecretCode();  // Generate a new code for the next round
         req.session.guessesHistory = [];
+    } else {
+        req.session.isCorrect = false;
     }
 
     res.status(200).json({ ...result, history: req.session.guessesHistory });
