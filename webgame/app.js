@@ -100,17 +100,19 @@ document.addEventListener('DOMContentLoaded', () => {
         guessInput.value = ''; // Clear input field after guess
     });
 
-    function updateHistory(history) {
+    function updateHistoryDisplay(history) {
         const historyEntriesElement = document.querySelector('.history-entries');
         historyEntriesElement.innerHTML = ''; // Clear existing history entries
-
+    
         history.forEach(entry => {
             const entryElement = document.createElement('div');
             entryElement.className = 'history-entry';
             entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            historyEntriesElement.insertBefore(entryElement);
+            // Insert the new entry at the top
+            historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
         });
     }
+    
 
     function showWinModal() {
     
