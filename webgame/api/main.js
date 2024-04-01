@@ -39,21 +39,7 @@ function checkForCode(secretCode, guess) {
 }
 
 // GET route to provide the current state of the game (tries and history)
-app.get('/api/main', (req, res) => {
-    // If there's no game in progress, initialize it
-    if (typeof req.session.secretCode === 'undefined' || req.session.isCorrect) {
-        req.session.secretCode = generateSecretCode();
-        req.session.guessesHistory = [];
-        req.session.tries = 0;
-        req.session.isCorrect = false;
-    }
 
-    // Respond with the current tries and history
-    res.status(200).json({
-        tries: req.session.tries,
-        history: req.session.guessesHistory
-    });
-});
 
 // POST route to process the guess and update the game state
 app.post('/api/main', (req, res) => {
