@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetchGameStatus();
 
                 if (result.isCorrect) {
-                    showWinModal(req.session.secretCode, result.tries);
+                    showWinModal(result.secretCode, result.tries);
                 }
             }
         } catch (error) {
@@ -166,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
             displayLeaderboard(leaderboardData);
     
             // After leaderboard is loaded, clear the history
-            updateHistory([]);
         } catch (error) {
             console.error('Failed to load leaderboard:', error);
         }
@@ -200,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of the leaderboard
     loadLeaderboard();
-    updateHistory([]);
     function clearGameState() {
         tries = 0; // Reset tries
         history = []; // Reset history

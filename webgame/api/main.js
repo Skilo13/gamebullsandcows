@@ -76,7 +76,7 @@ app.post('/api/main', (req, res) => {
         req.session.isCorrect = true;
     }
 
-    res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries });
+    res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries, secretCode:req.session.secretCode });
 });
 
 const PORT = process.env.PORT || 3000;
