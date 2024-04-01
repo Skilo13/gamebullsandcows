@@ -56,9 +56,24 @@ document.addEventListener('DOMContentLoaded', () => {
             historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
         });
     }
-    clearGameState();
+
     loadLeaderboard();
-    
+    fetchCurrentGameState();
+    async function fetchCurrentGameState() {
+        try {
+            const response = await fetch('/api/current-game');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const { currentTries, currentHistory } = await response.json();
+            // Update the UI with the fetched tries and history
+            tries = currentTries;
+            history = currentHistory;
+            updateHistoryDisplay(history);
+        } catch (error) {
+            console.error('Failed to fetch current game state:', error);
+        }
+    }
     document.getElementById('guessBtn').addEventListener('click', async () => {
         const guessInput = document.getElementById('guess');
         const guess = guessInput.value.trim();
@@ -232,6 +247,5 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHistoryDisplay(history); // Clear the history display
     }
 
-    // Call the clearGameState function to reset everything when the page loads
-    clearGameState();
+
 });
