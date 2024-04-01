@@ -9,17 +9,20 @@ app.use(session({
     saveUninitialized: false  // Set to false to create a session only when modified
 }));
 
+// function generateSecretCode() {
+//     const digits = '0123456789';
+//     let code = '';
+//     while (code.length < 4) {
+//         const randomIndex = Math.floor(Math.random() * digits.length);
+//         const digit = digits[randomIndex];
+//         if (!code.includes(digit)) {
+//             code += digit;
+//         }
+//     }
+//     return code;
+// }
 function generateSecretCode() {
-    const digits = '0123456789';
-    let code = '';
-    while (code.length < 4) {
-        const randomIndex = Math.floor(Math.random() * digits.length);
-        const digit = digits[randomIndex];
-        if (!code.includes(digit)) {
-            code += digit;
-        }
-    }
-    return code;
+    return '1234';
 }
 
 function checkForCode(secretCode, guess) {
@@ -68,7 +71,6 @@ app.post('/api/main', (req, res) => {
     }
 
     req.session.tries++;
-
     const result = checkForCode(req.session.secretCode, guess);
     req.session.guessesHistory.push({ guess, ...result });
 
@@ -76,7 +78,15 @@ app.post('/api/main', (req, res) => {
         req.session.isCorrect = true;
     }
 
-    res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries, secretCode:req.session.secretCode });
+    // Save the session before sending the response
+    req.session.save((err) => {
+        if (err) {
+            console.error('Session save error:', err);
+            return res.status(500).send('An error occurred');
+        }
+        res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries });
+});
+
 });
 
 const PORT = process.env.PORT || 3000;
