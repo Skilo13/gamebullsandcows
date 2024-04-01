@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const entryElement = document.createElement('div');
             entryElement.className = 'history-entry';
             entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            historyEntriesElement.appendChild(entryElement);
+            historyEntriesElement.insertBefore(entryElement);
         });
     }
 
