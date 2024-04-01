@@ -28,21 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     instructionsSection.style.display = 'none';
     gameSectionBtn.classList.add('active');
     instructionsSectionBtn.classList.remove('active');
-});
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    let tries = 0;
-    let history = []; // Initialize an empty history array
-
-    // Function to clear the game state on page load
-    function clearGameState() {
-        tries = 0; // Reset tries
-        history = []; // Reset history
-        updateHistoryDisplay(history); // Clear the history display
-    }
 
     // Function to update the history section on the page
     function updateHistoryDisplay(history) {
@@ -53,67 +38,66 @@ document.addEventListener('DOMContentLoaded', () => {
             const entryElement = document.createElement('div');
             entryElement.className = 'history-entry';
             entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
+            historyEntriesElement.appendChild(entryElement);
         });
     }
 
-    loadLeaderboard();
-    fetchCurrentGameState();
-    async function fetchCurrentGameState() {
+    // Function to fetch the current game state including tries and history
+    async function fetchGameStatus() {
         try {
-            const response = await fetch('/api/current-game');
+            const response = await fetch('/api/main');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const { currentTries, currentHistory } = await response.json();
-            // Update the UI with the fetched tries and history
-            tries = currentTries;
-            history = currentHistory;
+            const { tries, history } = await response.json();
+
+            // Update tries and history on the page
+            document.getElementById('numTries').textContent = tries;
             updateHistoryDisplay(history);
         } catch (error) {
-            console.error('Failed to fetch current game state:', error);
+            console.error('Failed to fetch game status:', error);
         }
     }
+
+    // Initialize the game by fetching the current game status
+    fetchGameStatus();
+
+    // Event listener for the guess button
     document.getElementById('guessBtn').addEventListener('click', async () => {
         const guessInput = document.getElementById('guess');
         const guess = guessInput.value.trim();
         const warningText = document.getElementById('warningText');
 
+        // Validate the guess
         if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
             warningText.textContent = 'Please enter a 4-digit number with unique digits.';
             return;
-        } else {
-            warningText.textContent = '';
         }
 
-        tries++; // Increment tries on each guess
+        warningText.textContent = ''; // Clear any previous warning
 
         try {
             const response = await fetch('/api/main', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ guess })
             });
-            const data = await response.json();
+            const result = await response.json();
 
-            if (data.error) {
-                warningText.textContent = data.error;
+            if (result.error) {
+                warningText.textContent = result.error;
             } else {
-                document.getElementById('response').textContent = `Bulls: ${data.bulls}, Cows: ${data.cows}`;
-                history.push({ guess: guess, ...data }); // Assume data contains bulls and cows
-                updateHistoryDisplay(history); // Update the display with the new history entry
-
-                if (data.isCorrect) {
-                    showWinModal();
-                    // Note: Do not reset tries here as it's needed for saving
-                }
+                document.getElementById('response').textContent = `Bulls: ${result.bulls}, Cows: ${result.cows}`;
+                fetchGameStatus(); // Re-fetch game status to update tries and history
             }
         } catch (error) {
-            console.error('Fetch error:', error);
+            console.error('There was a problem processing your guess:', error);
             warningText.textContent = 'There was a problem processing your guess. Please try again.';
         }
 
-        guessInput.value = ''; // Clear input field after processing
+        guessInput.value = ''; // Clear input field after guess
     });
 
     function updateHistory(history) {

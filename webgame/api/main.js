@@ -35,32 +35,48 @@ function checkForCode(secretCode, guess) {
     return { bulls, cows, isCorrect: bulls === 4 };
 }
 
-app.post('/api/main', (req, res) => {
-    // Initialize secretCode and guessesHistory if they don't exist in the session
+// GET route to provide the current state of the game (tries and history)
+app.get('/api/main', (req, res) => {
+    // If there's no game in progress, initialize it
     if (typeof req.session.secretCode === 'undefined' || req.session.isCorrect) {
         req.session.secretCode = generateSecretCode();
         req.session.guessesHistory = [];
+        req.session.tries = 0;
+        req.session.isCorrect = false;
+    }
+
+    // Respond with the current tries and history
+    res.status(200).json({
+        tries: req.session.tries,
+        history: req.session.guessesHistory
+    });
+});
+
+// POST route to process the guess and update the game state
+app.post('/api/main', (req, res) => {
+    if (typeof req.session.secretCode === 'undefined' || req.session.isCorrect) {
+        req.session.secretCode = generateSecretCode();
+        req.session.guessesHistory = [];
+        req.session.tries = 0; // Initialize tries here
         req.session.isCorrect = false; // Reset this flag for a new game
     }
 
     const { guess } = req.body;
 
-    // Check if the guess is not valid
     if (!guess || guess.length !== 4 || new Set(guess).size !== 4) {
         return res.status(400).json({ error: 'Guess must be a 4-digit number with unique digits.' });
     }
 
-    // Process the guess
+    req.session.tries++;
+
     const result = checkForCode(req.session.secretCode, guess);
     req.session.guessesHistory.push({ guess, ...result });
 
-    // Check if the game has been won
     if (result.isCorrect) {
-        req.session.isCorrect = true; // Set this flag when the game is won
+        req.session.isCorrect = true;
     }
 
-    // Return the result and history
-    res.status(200).json({ ...result, history: req.session.guessesHistory });
+    res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries });
 });
 
 const PORT = process.env.PORT || 3000;
