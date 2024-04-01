@@ -84,7 +84,7 @@ app.post('/api/main', (req, res) => {
             console.error('Session save error:', err);
             return res.status(500).send('An error occurred');
         }
-        res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries });
+        res.status(200).json({ ...result, history: req.session.guessesHistory, tries: req.session.tries, secretCode:req.session.secretCode });
 });
 
 });
