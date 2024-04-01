@@ -1,5 +1,3 @@
-// api/game.js
-
 const express = require('express');
 const session = require('express-session');
 const app = express();
@@ -8,7 +6,7 @@ app.use(express.json());
 app.use(session({
     secret: '9f8d3d4307f8e03d9e5b9c42b8e586a6c4bf89f8a8ee4a4a3b2e4ed3138b6de9',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false  // Set to false to create a session only when modified
 }));
 
 function generateSecretCode() {
@@ -38,9 +36,11 @@ function checkForCode(secretCode, guess) {
 }
 
 app.post('/api/main', (req, res) => {
+    // Generate a new secret code if there isn't one for the session or if the previous game was completed
     if (!req.session.secretCode || req.session.isCorrect) {
         req.session.secretCode = generateSecretCode();
         req.session.guessesHistory = [];
+        req.session.isCorrect = false; // Reset the game completion flag
     }
 
     const { guess } = req.body;
@@ -53,11 +53,7 @@ app.post('/api/main', (req, res) => {
     req.session.guessesHistory.push({ guess, ...result });
 
     if (result.isCorrect) {
-        req.session.isCorrect = true;  // Mark the session as won
-        req.session.secretCode = generateSecretCode();  // Generate a new code for the next round
-        req.session.guessesHistory = [];
-    } else {
-        req.session.isCorrect = false;
+        req.session.isCorrect = true;
     }
 
     res.status(200).json({ ...result, history: req.session.guessesHistory });
