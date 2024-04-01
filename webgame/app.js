@@ -101,21 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saveScoreBtn').addEventListener('click', async () => {
         const nameInput = document.getElementById('playerName');
         const name = nameInput.value.trim();
-        const triesText = document.getElementById('numTries'); // Get tries from the DOM
-        const tries = triesText.textContent; // Assuming this contains the correct number of tries
-        if (!name) {
-            alert('Please enter your name.');
-            return;
+        try {
+            // Fetch the current game state to get the latest tries count
+            const gameStateResponse = await fetch('/api/main');
+            if (!gameStateResponse.ok) {
+                throw new Error(`HTTP error! status: ${gameStateResponse.status}`);
+            }
+            const gameState = await gameStateResponse.json();
+    
+            // Now we have the latest tries count
+            const tries = gameState.tries;
+    
+            // Use this tries value to save the score
+            await saveScore(name, tries);
+            loadLeaderboard();
+            hideWinModal();
+            // Reset the game state for a new game
+            clearGameState();
+    
+        } catch (error) {
+            console.error('There was a problem fetching the game state or saving the score:', error);
+            // Display an error to the user
         }
-        
-        await saveScore(name, tries);
-        loadLeaderboard();
-        hideWinModal();
-        // Reset the tries for the new game
-        clearGameState();
-            
-        
-        
     });
 
     document.getElementById('playAgainBtn').addEventListener('click', async () => {
