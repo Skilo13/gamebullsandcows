@@ -1,128 +1,103 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Select header buttons
-    const gameSectionBtn = document.getElementById('gameSectionBtn');
-    const instructionsSectionBtn = document.getElementById('instructionsSectionBtn');
-
-    // Select sections to switch between
-    const gameSection = document.getElementById('game');
-    const instructionsSection = document.getElementById('instructions'); // Updated ID for instructions section
-
-    // Add event listener to the game section button
-    gameSectionBtn.addEventListener('click', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+        const gameSectionBtn = document.getElementById('gameSectionBtn');
+        const instructionsSectionBtn = document.getElementById('instructionsSectionBtn');
+        const gameSection = document.getElementById('game');
+        const instructionsSection = document.getElementById('instructions');
+    
+        gameSectionBtn.addEventListener('click', () => {
+            gameSection.style.display = 'block';
+            instructionsSection.style.display = 'none';
+            gameSectionBtn.classList.add('active');
+            instructionsSectionBtn.classList.remove('active');
+        });
+    
+        instructionsSectionBtn.addEventListener('click', () => {
+            gameSection.style.display = 'none';
+            instructionsSection.style.display = 'block';
+            gameSectionBtn.classList.remove('active');
+            instructionsSectionBtn.classList.add('active');
+        });
+    
         gameSection.style.display = 'block';
         instructionsSection.style.display = 'none';
         gameSectionBtn.classList.add('active');
         instructionsSectionBtn.classList.remove('active');
-    });
-
-    // Add event listener to the instructions section button
-    instructionsSectionBtn.addEventListener('click', () => {
-        gameSection.style.display = 'none';
-        instructionsSection.style.display = 'block';
-        gameSectionBtn.classList.remove('active');
-        instructionsSectionBtn.classList.add('active');
-    });
-
-    // Initial display: game section active, instructions section hidden
-    gameSection.style.display = 'block';
-    instructionsSection.style.display = 'none';
-    gameSectionBtn.classList.add('active');
-    instructionsSectionBtn.classList.remove('active');
-
-    // Function to update the history section on the page
-    function updateHistoryDisplay(history) {
-        const historyEntriesElement = document.querySelector('.history-entries');
-        historyEntriesElement.innerHTML = ''; // Clear existing history entries
-
-        history.forEach(entry => {
-            const entryElement = document.createElement('div');
-            entryElement.className = 'history-entry';
-            entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            historyEntriesElement.appendChild(entryElement);
-        });
-    }
-
-    // Function to fetch the current game state including tries and history
-    async function fetchGameStatus() {
-        try {
-            const response = await fetch('/api/main');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const { tries, history } = await response.json();
-
-            // Update tries and history on the page
-            document.getElementById('numTries').textContent = tries;
-            updateHistoryDisplay(history);
-        } catch (error) {
-            console.error('Failed to fetch game status:', error);
-        }
-    }
-
-    // Initialize the game by fetching the current game status
-    fetchGameStatus();
-
-    // Event listener for the guess button
-    document.getElementById('guessBtn').addEventListener('click', async () => {
-        const guessInput = document.getElementById('guess');
-        const guess = guessInput.value.trim();
-        const warningText = document.getElementById('warningText');
-
-        // Validate the guess
-        if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
-            warningText.textContent = 'Please enter a 4-digit number with unique digits.';
-            return;
-        }
-
-        warningText.textContent = ''; // Clear any previous warning
-
-        try {
-            const response = await fetch('/api/main', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ guess })
+    
+        function updateHistoryDisplay(history) {
+            const historyEntriesElement = document.querySelector('.history-entries');
+            historyEntriesElement.innerHTML = '';
+    
+            history.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'history-entry';
+                entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
+                historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
             });
-            const result = await response.json();
-
-            if (result.error) {
-                warningText.textContent = result.error;
-            } else {
-                document.getElementById('response').textContent = `Bulls: ${result.bulls}, Cows: ${result.cows}`;
-                fetchGameStatus(); // Re-fetch game status to update tries and history
-            }
-        } catch (error) {
-            console.error('There was a problem processing your guess:', error);
-            warningText.textContent = 'There was a problem processing your guess. Please try again.';
         }
-
-        guessInput.value = ''; // Clear input field after guess
-    });
-
-    function updateHistoryDisplay(history) {
-        const historyEntriesElement = document.querySelector('.history-entries');
-        historyEntriesElement.innerHTML = ''; // Clear existing history entries
     
-        history.forEach(entry => {
-            const entryElement = document.createElement('div');
-            entryElement.className = 'history-entry';
-            entryElement.textContent = `Guess: ${entry.guess}, Bulls: ${entry.bulls}, Cows: ${entry.cows}`;
-            // Insert the new entry at the top
-            historyEntriesElement.insertBefore(entryElement, historyEntriesElement.firstChild);
+        async function fetchGameStatus() {
+            try {
+                const response = await fetch('/api/main');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const { tries, history } = await response.json();
+                document.getElementById('numTries').textContent = tries;
+                updateHistoryDisplay(history);
+            } catch (error) {
+                console.error('Failed to fetch game status:', error);
+            }
+        }
+    
+        fetchGameStatus();
+    
+        document.getElementById('guessBtn').addEventListener('click', async () => {
+            const guessInput = document.getElementById('guess');
+            const guess = guessInput.value.trim();
+            const warningText = document.getElementById('warningText');
+    
+            if (!guess.match(/^\d{4}$/) || new Set(guess).size !== 4) {
+                warningText.textContent = 'Please enter a 4-digit number with unique digits.';
+                return;
+            }
+    
+            warningText.textContent = '';
+    
+            try {
+                const response = await fetch('/api/main', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ guess })
+                });
+                const result = await response.json();
+    
+                if (result.error) {
+                    warningText.textContent = result.error;
+                } else {
+                    document.getElementById('response').textContent = `Bulls: ${result.bulls}, Cows: ${result.cows}`;
+                    fetchGameStatus();
+    
+                    if (result.isCorrect) {
+                        showWinModal(result.secretCode, result.tries);
+                    }
+                }
+            } catch (error) {
+                console.error('There was a problem processing your guess:', error);
+                warningText.textContent = 'There was a problem processing your guess. Please try again.';
+            }
+    
+            guessInput.value = '';
         });
-    }
     
-
-    function showWinModal() {
-    
-        const numTriesSpan = document.getElementById('numTries');
-  
-        numTriesSpan.textContent = tries; 
-        const modal = document.getElementById('winModal');
-        modal.style.display = 'block';
-        
-    }
+        function showWinModal(secretCode, tries) {
+            document.getElementById('winCode').textContent = secretCode;
+            document.getElementById('numTries').textContent = tries;
+            const modal = document.getElementById('winModal');
+            modal.style.display = 'block';
+        }
 
     document.getElementById('saveScoreBtn').addEventListener('click', async () => {
         const nameInput = document.getElementById('playerName');
