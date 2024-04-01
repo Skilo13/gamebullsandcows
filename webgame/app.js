@@ -35,7 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    async function fetchGameStatus() {
+        try {
+            const response = await fetch('/api/main');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const { tries, history } = await response.json();
+            updateHistoryDisplay(history);
+        } catch (error) {
+            console.error('Failed to fetch game status:', error);
+        }
+    }
 
+    fetchGameStatus();
 
     document.getElementById('guessBtn').addEventListener('click', async () => {
         const guessInput = document.getElementById('guess');
