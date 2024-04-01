@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (result.isCorrect) {
                     showWinModal(result.secretCode, result.tries);
+                    tries=result.tries
                 }
             }
         } catch (error) {
@@ -104,12 +105,24 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Please enter your name.');
             return;
         }
-
-        await saveScore(name, tries);
-        loadLeaderboard();
-        hideWinModal();
-        // Reset the tries for the new game
-        clearGameState();
+        try {
+            const response = await fetch('/api/main');
+            const result = await response.json();
+            if (result.error) {
+                warningText.textContent = result.error;
+            } else {
+                tries=result.tries;
+                await saveScore(name, tries);
+                loadLeaderboard();
+                hideWinModal();
+                // Reset the tries for the new game
+                clearGameState();
+            }
+        } catch (error) {
+            console.error('There was a problem processing your save', error);
+            warningText.textContent = 'There was a problem processing your save. Please try again.';
+        }
+        
     });
 
     document.getElementById('playAgainBtn').addEventListener('click', async () => {
@@ -129,9 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error starting a new game:', error);
         }
     });
-    
-
-    
 
     function hideWinModal() {
         const modal = document.getElementById('winModal');
